@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101611">
+  <link rel="icon" href="data:,">
+  <title>OUTLAND // Extraction Protocol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="game-shell">
+    <canvas id="game" aria-label="Outland extraction shooter game"></canvas>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">O</span><span>OUTLAND<span class="brand-sub">FIELD OPERATIONS</span></span></div>
+      <div class="top-center"><span class="live-dot"></span><span id="sector-label">SECTOR 04 — THE SCRAPLANDS</span><span class="separator">/</span><span id="weather-label">ASHFALL · 18:42</span></div>
+      <div class="top-right"><span class="comms"><i></i> COMMS ONLINE</span><button class="icon-btn" id="sound-btn" title="Toggle sound">♪</button><button class="icon-btn" id="pause-btn" title="Pause">Ⅱ</button></div>
+    </header>
+    <section class="mission-card hud-card">
+      <div class="eyebrow"><span class="eyebrow-line"></span> ACTIVE CONTRACT <span class="contract-code">#04-119</span></div>
+      <h1>THE LAST<br><em>RUN</em></h1>
+      <p class="mission-copy">Recover salvage from the dead zone.<br>Make it back before the signal fades.</p>
+      <div class="objective"><span class="objective-icon">⌖</span><div><b>PRIMARY OBJECTIVE</b><span>Secure <strong id="loot-count">0 / 3</strong> data cores</span></div><span class="check" id="objective-check">○</span></div>
+      <div class="objective secondary"><span class="objective-icon">↗</span><div><b>EXTRACTION</b><span id="extract-status">Reach the uplink site</span></div><span class="distance" id="extract-distance">-- m</span></div>
+      <div class="divider"></div>
+      <div class="intel-title">FIELD INTEL</div>
+      <div class="intel-row"><span class="intel-symbol hostile">▲</span><span>Hostile activity</span><b>MODERATE</b></div>
+      <div class="intel-row"><span class="intel-symbol">◉</span><span>Signal window</span><b id="signal-window">06:00</b></div>
+      <div class="intel-row"><span class="intel-symbol">◇</span><span>Local salvage</span><b>VALUABLE</b></div>
+      <div class="mission-footer"><span>CONTRACT REWARD</span><b>1,250 <small>CR</small></b></div>
+    </section>
+    <div class="right-stack">
+      <section class="map-card hud-card"><div class="panel-heading"><span>TACTICAL MAP</span><span class="map-live"><i></i> LIVE</span></div><canvas id="minimap" width="220" height="160"></canvas><div class="map-legend"><span><i class="legend-player"></i> YOU</span><span><i class="legend-hostile"></i> HOSTILE</span><span><i class="legend-extract"></i> UPLINK</span></div></section>
+      <section class="status-card hud-card"><div class="panel-heading"><span>EXO-SUIT STATUS</span><span class="status-ready">● NOMINAL</span></div><div class="health-line"><span>VITALS</span><b id="health-value">100</b></div><div class="health-track"><i id="health-bar"></i></div><div class="status-grid"><div><span>SHIELD</span><b id="shield-value">75</b><div class="mini-track"><i id="shield-bar"></i></div></div><div><span>STAMINA</span><b id="stamina-value">100</b><div class="mini-track stamina-track"><i id="stamina-bar"></i></div></div></div></section>
+    </div>
+    <div class="center-notice" id="center-notice"></div>
+    <div class="interact-prompt" id="interact-prompt"><span class="keycap">E</span><span id="prompt-text">SCAVENGE CACHE</span></div>
+    <div class="crosshair" id="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+    <section class="bottom-left"><div class="compass"><span class="compass-tick"></span><b>N</b><span>NE</span><span class="compass-active">E</span><span>SE</span><span>S</span></div><div class="coordinates">GRID <b id="grid-coordinate">C-04</b><span>·</span> ALT 012</div></section>
+    <section class="weapon-panel hud-card"><div class="weapon-label">PRIMARY WEAPON <span>AK-74M</span></div><div class="ammo-row"><div class="ammo-main" id="ammo-current">30</div><div class="ammo-reserve">/ <b id="ammo-reserve">120</b><span>5.45×39</span></div><div class="weapon-icon">⌁</div></div><div class="weapon-meter"><i></i></div><div class="weapon-hints"><span><kbd>R</kbd> RELOAD</span><span><kbd>SHIFT</kbd> SPRINT</span></div></section>
+    <div class="toast" id="toast"></div>
+    <div class="damage-flash" id="damage-flash"></div>
+    <div class="screen-overlay" id="screen-overlay">
+      <div class="title-lockup"><div class="title-kicker"><span></span> FRONTIER RESPONSE DIVISION</div><h2>OUT<span>LAND</span></h2><div class="title-rule"><i></i> EXTRACTION PROTOCOL <i></i></div></div>
+      <div class="briefing"><div class="briefing-tag">OPERATION // DUST SIGNAL</div><h3>Nothing comes back<br><em>the way it went in.</em></h3><p>A lost relay is broadcasting beneath the Scraplands. Drop in, recover three data cores, and reach the uplink before the signal window closes. The machines have already noticed you.</p><div class="brief-stats"><div><span>THREAT LEVEL</span><b class="threat">●●●<i>○○</i></b></div><div><span>EXPECTED DURATION</span><b>06 MIN</b></div><div><span>OPERATOR</span><b>ROOK-07</b></div></div><button id="deploy-btn"><span>DEPLOY TO SCRAPLANDS</span><b>↗</b></button><div class="brief-controls"><span><kbd>WASD</kbd> MOVE</span><span><kbd>MOUSE</kbd> AIM / FIRE</span><span><kbd>E</kbd> INTERACT</span></div></div>
+      <div class="overlay-foot"><span>FIELD GUIDE // BUILD 0.4.19</span><span>NO BACKUP. NO SECOND CHANCES.</span></div>
+    </div>
+    <div class="result-overlay hidden" id="result-overlay"><div class="result-content"><div class="result-kicker" id="result-kicker">MISSION COMPLETE</div><h2 id="result-title">EXTRACTED</h2><p id="result-copy">You made it out with the goods.</p><div class="result-stats"><div><span>CORES SECURED</span><b id="result-cores">0 / 3</b></div><div><span>HOSTILES NEUTRALIZED</span><b id="result-kills">0</b></div><div><span>CONTRACT PAYOUT</span><b id="result-reward">0 CR</b></div></div><button id="again-btn">DEPLOY AGAIN <b>↻</b></button></div></div>
+    <div class="pause-overlay hidden" id="pause-overlay"><div><span>FIELD OPERATIONS</span><h2>PAUSED</h2><p>Take a breath, operator.</p><button id="resume-btn">RESUME MISSION</button></div></div>
+    <div class="touch-controls"><div class="touch-stick" id="touch-stick"><i id="stick-knob"></i><span>MOVE</span></div><div class="touch-actions"><button id="touch-use">USE</button><button id="touch-fire">FIRE</button></div></div>
+    <div class="mobile-hint">TOUCH TO MOVE · HOLD FIRE TO AIM & SHOOT</div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
